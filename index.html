@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>For Shivuuu ❤️</title>
+    <title>For My Shivuuu ❤️</title>
     <style>
         :root {
-            --bg-color: #fff0f3;
-            --main-pink: #ff4d6d;
-            --soft-pink: #ffb3c1;
-            --gold: #ffd700;
+            --primary: #ff1f6d;
+            --secondary: #ff8fab;
+            --bg: #fff0f3;
         }
 
         body {
@@ -19,115 +18,97 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: var(--bg-color);
-            font-family: 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+            background-color: var(--bg);
+            font-family: 'Arial Rounded MT Bold', sans-serif;
             overflow: hidden;
             text-align: center;
-            transition: background-color 2s ease;
+            transition: background 1.5s ease;
         }
 
-        /* Stages */
         .stage {
             display: none;
-            width: 90%;
+            width: 85%;
             z-index: 10;
-            animation: bounceIn 0.8s ease forwards;
+            animation: fadeIn 1s ease-in;
         }
 
         .active { display: block; }
 
-        @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .heart-main { font-size: 70px; animation: heartbeat 1.2s infinite; }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
         }
 
-        /* Decorations */
-        .heart-icon { font-size: 80px; filter: drop-shadow(0 0 10px rgba(255,77,109,0.5)); }
-        
-        #shayari-text {
+        #text-container {
             font-size: 1.4rem;
-            color: #ff4d6d;
+            color: var(--primary);
             line-height: 1.8;
             font-weight: bold;
-            text-shadow: 1px 1px 0px white;
+            margin: 20px 0;
         }
 
-        .iloveyou {
-            font-size: 2rem;
-            color: #ff0040;
-            margin-top: 20px;
+        .highlight {
+            font-size: 1.8rem;
             display: block;
-            animation: glow 1s ease-in-out infinite alternate;
+            margin-top: 15px;
+            color: #ff0040;
+            text-shadow: 0 0 10px rgba(255, 0, 64, 0.3);
         }
 
-        @keyframes glow {
-            from { text-shadow: 0 0 5px #fff, 0 0 10px #ffb3c1; }
-            to { text-shadow: 0 0 20px #ff4d6d, 0 0 30px #ff4d6d; }
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(255, 31, 109, 0.4);
+            margin-top: 20px;
+            font-weight: bold;
         }
 
-        /* Colorful Floating Elements */
-        .confetti {
+        .floating {
             position: absolute;
-            width: 10px;
-            height: 10px;
-            opacity: 0.8;
-            animation: fall linear forwards;
+            pointer-events: none;
+            animation: rise linear forwards;
         }
 
-        @keyframes fall {
-            to { transform: translateY(110vh) rotate(720deg); }
+        @keyframes rise {
+            to { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
         }
-
     </style>
 </head>
-<body onclick="nextStage()">
+<body>
 
-    <div id="bg-elements"></div>
-
-    <div id="scene1" class="stage active">
-        <div class="heart-icon">💖</div>
-        <h2 style="color: #ff4d6d;">Hey Shivuuu...</h2>
-        <p style="color: #888;">(Tap to open my heart)</p>
+    <div id="stg1" class="stage active" onclick="startStory()">
+        <div class="heart-main">🎁</div>
+        <h2 style="color: var(--primary);">Shivuuu, I have a secret...</h2>
+        <p style="color: #888;">(Tap to open)</p>
     </div>
 
-    <div id="scene2" class="stage">
-        <div id="shayari-text"></div>
+    <div id="stg2" class="stage">
+        <div id="text-container"></div>
+        <div id="action-btn" style="display:none;">
+            <button onclick="celebrate()">Will you be mine? 💍</button>
+        </div>
     </div>
 
-    <div id="scene3" class="stage">
-        <h1 style="color: #ff4d6d; margin:0;">I'm Sorry...</h1>
-        <p style="color: #555; font-size: 1.1rem; padding: 20px;">
-            I know I made a mistake, but my world is boring without you. 
-            Can we please start over?
-        </p>
-        <div class="heart-icon" style="font-size: 50px;">🥺🌹</div>
+    <div id="stg3" class="stage">
+        <div class="heart-main">💖</div>
+        <h1 style="color: var(--primary);">I Love You So So Much!</h1>
+        <p style="color: var(--secondary); font-size: 1.2rem;">You made me the happiest person today, Shivuuu! ✨</p>
     </div>
 
     <script>
-        let currentStage = 0;
-        const stages = ['scene1', 'scene2', 'scene3'];
-        const colors = ['#fff0f3', '#f0f4ff', '#fff9e6', '#f2fff0'];
+        const story = "Tujhe rusna, Tujhe hasna,\r\nMajhya sathi sagla aahe...\r\nTu sobat aslis ki,\r\nHe jag khup vegla aahe.\r\n\r\nMajhya ayushyat kaayamswaruphi,\r\nRahshil ka?\r\n";
 
-        const shayari = "Tujhe rusna, Tujhe hasna,\r\nMajhya sathi sagla aahe...\r\nTu sobat aslis ki,\r\nHe jag khup vegla aahe.\r\n\r\n<span class='iloveyou'>I Love You So Much! ❤️</span>";
-
-        function createConfetti() {
-            const colors = ['#ff4d6d', '#ffb3c1', '#ffd700', '#4cc9f0', '#72efdd'];
-            for(let i=0; i<50; i++) {
-                setTimeout(() => {
-                    const c = document.createElement('div');
-                    c.classList.add('confetti');
-                    c.style.left = Math.random() * 100 + 'vw';
-                    c.style.top = '-10px';
-                    c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                    c.style.width = Math.random() * 12 + 5 + 'px';
-                    c.style.height = c.style.width;
-                    c.style.animationDuration = Math.random() * 3 + 2 + 's';
-                    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-                    document.body.appendChild(c);
-                    setTimeout(() => c.remove(), 5000);
-                }, i * 100);
-            }
+        function startStory() {
+            document.getElementById('stg1').classList.remove('active');
+            document.getElementById('stg2').classList.add('active');
+            typeWriter(story, 'text-container', 60);
         }
 
         function typeWriter(text, elementId, speed) {
@@ -135,40 +116,35 @@
             const elem = document.getElementById(elementId);
             function type() {
                 if (i < text.length) {
-                    if (text.substr(i, 4) === "<br>") { elem.innerHTML += "<br>"; i += 4; }
-                    else if (text.substr(i, 1) === "\r") { elem.innerHTML += "<br>"; i += 2; }
-                    else if (text.substr(i, 1) === "<") { 
-                        let end = text.indexOf(">", i);
-                        elem.innerHTML += text.substring(i, end + 1);
-                        i = end + 1;
-                    }
-                    else {
-                        elem.innerHTML += text.charAt(i);
-                        i++;
-                    }
+                    if (text.substr(i, 1) === "\r") { elem.innerHTML += "<br>"; i += 2; }
+                    else { elem.innerHTML += text.charAt(i); i++; }
                     setTimeout(type, speed);
+                } else {
+                    document.getElementById('action-btn').style.display = 'block';
                 }
             }
             type();
         }
 
-        function nextStage() {
-            if (currentStage >= stages.length - 1) return;
-
-            document.getElementById(stages[currentStage]).classList.remove('active');
-            currentStage++;
-            const next = document.getElementById(stages[currentStage]);
-            next.classList.add('active');
-
-            // Change background color randomly
-            document.body.style.backgroundColor = colors[currentStage % colors.length];
-
-            if (stages[currentStage] === 'scene2') {
-                typeWriter(shayari, 'shayari-text', 60);
-            }
-
-            if (stages[currentStage] === 'scene3') {
-                createConfetti();
+        function celebrate() {
+            document.getElementById('stg2').classList.remove('active');
+            document.getElementById('stg3').classList.add('active');
+            document.body.style.background = "#ffccd5";
+            
+            // Colorful Heart Rain
+            const symbols = ['❤️', '💖', '✨', '🌸', '💘'];
+            for(let i=0; i<100; i++) {
+                setTimeout(() => {
+                    const el = document.createElement('div');
+                    el.classList.add('floating');
+                    el.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
+                    el.style.left = Math.random() * 100 + 'vw';
+                    el.style.top = '100vh';
+                    el.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                    el.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                    document.body.appendChild(el);
+                    setTimeout(() => el.remove(), 5000);
+                }, i * 50);
             }
         }
     </script>
