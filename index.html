@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Shivuuu</title>
+    <style>
+        :root {
+            --bg-color: #ffeef2;
+            --main-pink: #ff4d6d;
+            --soft-pink: #ffb3c1;
+            --text-gray: #555;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            text-align: center;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        /* Generic Container */
+        .stage {
+            display: none;
+            width: 90%;
+            max-width: 400px;
+            animation: fadeIn 1.5s ease forwards;
+        }
+
+        .active {
+            display: block;
+        }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+        @keyframes drift { from { transform: translateY(0px) rotate(0deg); opacity: 1; } to { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
+
+        /* Scene 1: Tap to Open */
+        #scene-tap { text-align: center; }
+        .tap-heart { font-size: 80px; color: var(--main-pink); animation: pulse 1s infinite; margin-bottom: 20px; }
+        .tap-instruction { font-size: 1.2rem; color: var(--main-pink); font-weight: bold; }
+
+        /* Scene 2: Shayari */
+        #scene-shayari { }
+        #shayari-text {
+            font-size: 1.5rem;
+            color: var(--main-pink);
+            font-weight: bold;
+            line-height: 1.6;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* Scene 3: Sorry */
+        #scene-sorry h1 { color: var(--main-pink); font-size: 2.3rem; margin: 0 0 20px 0; }
+        #message-text { font-size: 1.1rem; color: var(--text-gray); line-height: 1.6; padding: 0 10px; }
+
+        /* Floating background hearts */
+        .bg-heart {
+            position: absolute;
+            bottom: -50px;
+            color: var(--soft-pink);
+            opacity: 0.7;
+            pointer-events: none;
+            animation: drift linear infinite;
+        }
+    </style>
+</head>
+<body onclick="nextStage()">
+
+    <div id="bg-effects"></div>
+
+    <div id="scene-tap" class="stage active">
+        <div class="tap-heart">❤️</div>
+        <div class="tap-instruction">Hi Shivuuu, please tap...</div>
+    </div>
+
+    <div id="scene-shayari" class="stage">
+        <div id="shayari-text"></div>
+    </div>
+
+    <div id="scene-sorry" class="stage">
+        <h1>I'm Sorry</h1>
+        <div id="message-text">Hey Shivuuu... I really messed up and I've been feeling terrible. Can we please make up? I promise to make it up to you! ✨</div>
+    </div>
+
+    <script>
+        let currentStage = 0;
+        const stages = ['scene-tap', 'scene-shayari', 'scene-sorry'];
+        
+        // Marathi Shayari in English Alphabets (Cute/Romantic/Apology)
+        const shayariMessage = "Tujhe rusna, Tujhe hasna,\r\nMajhya sathi sagla aahe,\r\nHe mana pasun sorry,\r\nAata tari maaf kar na...\r\n";
+
+        function createBgEffect() {
+            const container = document.getElementById('bg-effects');
+            for(let i=0; i<15; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('bg-heart');
+                heart.innerHTML = '❤';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                heart.style.animationDelay = (Math.random() * 5) + 's';
+                container.appendChild(heart);
+            }
+        }
+
+        function typeWriter(text, elementId, speed, callback) {
+            let i = 0;
+            const element = document.getElementById(elementId);
+            element.innerHTML = ""; // Clear existing
+
+            function type() {
+                if (i < text.length) {
+                    if (text.substring(i, i + 2) === "\r\n") {
+                        element.innerHTML += "<br>";
+                        i += 2;
+                    } else {
+                        element.innerHTML += text.charAt(i);
+                        i++;
+                    }
+                    setTimeout(type, speed);
+                } else if (callback) {
+                    callback();
+                }
+            }
+            type();
+        }
+
+        function nextStage() {
+            if (currentStage >= stages.length - 1) return; // Stop at last stage
+
+            const currentId = stages[currentStage];
+            document.getElementById(currentId).classList.remove('active');
+
+            currentStage++;
+            const nextId = stages[currentStage];
+            document.getElementById(nextId).classList.add('active');
+
+            if (nextId === 'scene-shayari') {
+                // Adjust speed for mobile: 80ms per char
+                typeWriter(shayariMessage, 'shayari-text', 80);
+            }
+        }
+
+        // Initialize
+        window.onload = () => {
+            createBgEffect();
+        };
+    </script>
+</body>
+</html>
